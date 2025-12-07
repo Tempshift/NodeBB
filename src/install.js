@@ -36,7 +36,7 @@ questions.main = [
 	{
 		name: 'database',
 		description: 'Which database to use',
-		default: nconf.get('database') || 'mongo',
+		default: nconf.get('database') || 'postgres',
 	},
 ];
 

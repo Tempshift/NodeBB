@@ -15,23 +15,23 @@ postgresModule.questions = [
 	{
 		name: 'postgres:host',
 		description: 'Host IP or address of your PostgreSQL instance',
-		default: nconf.get('postgres:host') || nconf.get('defaults:postgres:host') || '127.0.0.1',
+		default: nconf.get('postgres:host') || nconf.get('defaults:postgres:host') || 'localhost',
 	},
 	{
 		name: 'postgres:port',
 		description: 'Host port of your PostgreSQL instance',
-		default: nconf.get('postgres:port') || nconf.get('defaults:postgres:port') || 5432,
+		default: nconf.get('postgres:port') || nconf.get('defaults:postgres:port') || 5433,
 	},
 	{
 		name: 'postgres:username',
 		description: 'PostgreSQL username',
-		default: nconf.get('postgres:username') || nconf.get('defaults:postgres:username') || '',
+		default: nconf.get('postgres:username') || nconf.get('defaults:postgres:username') || 'postgres',
 	},
 	{
 		name: 'postgres:password',
 		description: 'Password of your PostgreSQL database',
 		hidden: true,
-		default: nconf.get('postgres:password') || nconf.get('defaults:postgres:password') || '',
+		default: nconf.get('postgres:password') || nconf.get('defaults:postgres:password') || 'postgres',
 		before: function (value) { value = value || nconf.get('postgres:password') || ''; return value; },
 	},
 	{
