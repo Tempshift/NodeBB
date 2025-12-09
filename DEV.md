@@ -4,6 +4,7 @@ Complete guide for setting up and running NodeBB locally with PostgreSQL and Red
 
 ## Prerequisites
 
+- **Bun**: Version 1.0 or greater ([installation instructions](https://bun.sh))
 - **Node.js**: Version 20 or greater ([download](https://nodejs.org/))
 - **PostgreSQL**: Version 12 or greater
 - **Redis**: Version 7.2 or greater
@@ -101,11 +102,6 @@ docker run -d \
 
 ### 3. Install NodeBB Dependencies
 
-```bash
-npm install
-```
-
-Or using Bun:
 ```bash
 bun install
 ```
@@ -295,10 +291,10 @@ docker-compose -f docker-compose-pgsql.yml up -d --build
 ./nodebb upgrade
 
 # Run tests
-npm test
+bun test
 
 # Lint code
-npm run lint
+bun run lint
 ```
 
 ---
@@ -363,7 +359,7 @@ rm -rf node_modules/.cache
 **Reinstall dependencies:**
 ```bash
 rm -rf node_modules
-npm install
+bun install
 ./nodebb build
 ```
 

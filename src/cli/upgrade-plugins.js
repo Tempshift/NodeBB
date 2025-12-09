@@ -13,7 +13,10 @@ const pkgInstall = require('./package-install');
 
 const packageManager = pkgInstall.getPackageManager();
 let packageManagerExecutable = packageManager;
-const packageManagerInstallArgs = packageManager === 'yarn' ? ['add'] : ['install', '--save'];
+let packageManagerInstallArgs = packageManager === 'yarn' ? ['add'] : ['install', '--save'];
+if (packageManager === 'bun') {
+	packageManagerInstallArgs = ['add'];
+}
 
 if (process.platform === 'win32') {
 	packageManagerExecutable += '.cmd';

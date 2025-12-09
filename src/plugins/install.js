@@ -34,6 +34,10 @@ const packageManagerCommands = {
 		install: 'install',
 		uninstall: 'uninstall',
 	},
+	bun: {
+		install: 'add',
+		uninstall: 'remove',
+	},
 };
 
 if (process.platform === 'win32') {

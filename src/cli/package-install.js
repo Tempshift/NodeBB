@@ -57,6 +57,7 @@ pkgInstall.supportedPackageManager = [
 	'cnpm',
 	'pnpm',
 	'yarn',
+	'bun',
 ];
 
 pkgInstall.getPackageManager = () => {
@@ -94,7 +95,7 @@ pkgInstall.getPackageManager = () => {
 };
 
 function getPackageManagerByLockfile() {
-	for (const [packageManager, lockfile] of Object.entries({ npm: 'package-lock.json', yarn: 'yarn.lock', pnpm: 'pnpm-lock.yaml' })) {
+	for (const [packageManager, lockfile] of Object.entries({ bun: 'bun.lock', npm: 'package-lock.json', yarn: 'yarn.lock', pnpm: 'pnpm-lock.yaml' })) {
 		try {
 			fs.accessSync(path.resolve(__dirname, `../../${lockfile}`), fs.constants.R_OK);
 			return packageManager;
@@ -118,6 +119,9 @@ pkgInstall.installAll = () => {
 				break;
 			case 'cnpm':
 				command = `cnpm install ${prod ? ' --production' : ''}`;
+				break;
+			case 'bun':
+				command = `bun install${prod ? ' --production' : ''}`;
 				break;
 			default:
 				command += prod ? ' --omit=dev' : '';

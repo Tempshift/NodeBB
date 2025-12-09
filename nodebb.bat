@@ -1,1 +1,1 @@
-@echo off && cd %~dp0 && node ./nodebb %*
+@echo off && cd %~dp0 && bun ./nodebb %*

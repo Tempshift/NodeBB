@@ -4,6 +4,7 @@ Complete guide for deploying and running NodeBB in production with remote Postgr
 
 ## Prerequisites
 
+- **Bun**: Version 1.0 or greater on production server
 - **Node.js**: Version 20 or greater on production server
 - **Remote PostgreSQL**: Version 12 or greater (managed service or dedicated server)
 - **Remote Redis**: Version 7.2 or greater (managed service or dedicated server)
@@ -97,13 +98,16 @@ sudo ufw allow from YOUR_APP_SERVER_IP to any port 6379
 
 **Install Node.js:**
 ```bash
+# Using Bun
+curl -fsSL https://bun.sh/install | bash
+
 # Using NodeSource
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
 # Verify
+bun --version
 node --version
-npm --version
 ```
 
 **Install Build Tools:**
@@ -129,7 +133,7 @@ git clone https://github.com/NodeBB/NodeBB.git .
 
 **Install Dependencies:**
 ```bash
-npm install --omit=dev
+bun install --production
 ```
 
 ### 4. Configure NodeBB for Production
@@ -403,7 +407,7 @@ cd /opt/nodebb
 
 # Backup database first!
 git pull
-npm install --omit=dev
+bun install --production
 ./nodebb upgrade
 ./nodebb build
 

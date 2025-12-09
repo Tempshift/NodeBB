@@ -39,6 +39,7 @@ Our minimalist "Harmony" theme gets you going right away, no coding experience r
 
 NodeBB requires the following software to be installed:
 
+* A version of Bun at least 1.0 or greater ([installation instructions](https://bun.sh))
 * A version of Node.js at least 20 or greater ([installation/upgrade instructions](https://github.com/nodesource/distributions))
 * MongoDB, version 5 or greater **or** Redis, version 7.2 or greater
 * If you are using [clustering](https://docs.nodebb.org/configuring/scaling/) you need Redis installed and configured.

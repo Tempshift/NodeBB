@@ -1,4 +1,4 @@
-FROM node:lts AS git
+FROM oven/bun:1 AS git
 
 ENV USER=nodebb \
     UID=1001 \
@@ -20,7 +20,7 @@ RUN git clone --recurse-submodules -j8 --depth 1 https://github.com/NodeBB/NodeB
 
 RUN find . -mindepth 1 -maxdepth 1 -name '.*' ! -name '.' ! -name '..' -exec bash -c 'echo "Deleting {}"; rm -rf {}' \;
 
-FROM node:lts AS node_modules_touch
+FROM oven/bun:1 AS node_modules_touch
 
 ENV NODE_ENV=development \
     USER=nodebb \
@@ -29,8 +29,7 @@ ENV NODE_ENV=development \
 
 WORKDIR /usr/src/app/
 
-RUN corepack enable \
-  && groupadd --gid ${GID} ${USER} \
+RUN groupadd --gid ${GID} ${USER} \
   && useradd --uid ${UID} --gid ${GID} --home-dir /usr/src/app/ --shell /bin/bash ${USER} \
   && chown -R ${USER}:${USER} /usr/src/app/
 
@@ -38,10 +37,10 @@ COPY --from=git --chown=${USER}:${USER} /usr/src/app/install/package.json /usr/s
 
 USER ${USER}
 
-RUN npm install \
-    && rm -rf .npm
+RUN bun install \
+    && rm -rf ~/.bun/install/cache
 
-FROM node:lts-slim AS final
+FROM oven/bun:1-slim AS final
 
 ENV NODE_ENV=development \
     DAEMON=false \
@@ -52,8 +51,7 @@ ENV NODE_ENV=development \
 
 WORKDIR /usr/src/app/
 
-RUN corepack enable \
-    && groupadd --gid ${GID} ${USER} \
+RUN groupadd --gid ${GID} ${USER} \
     && useradd --uid ${UID} --gid ${GID} --home-dir /usr/src/app/ --shell /bin/bash ${USER} \
     && mkdir -p /usr/src/app/logs/ /opt/config/ \
     && chown -R ${USER}:${USER} /usr/src/app/ /opt/config/

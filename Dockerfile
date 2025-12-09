@@ -1,4 +1,4 @@
-FROM node:lts as build
+FROM oven/bun:1 as build
 
 ENV NODE_ENV=production \
     DAEMON=false \
@@ -10,9 +10,6 @@ ENV NODE_ENV=production \
 WORKDIR /usr/src/app/
 
 COPY . /usr/src/app/
-
-# Install corepack to allow usage of other package managers
-RUN corepack enable
 
 # Removing unnecessary files for us
 RUN find . -mindepth 1 -maxdepth 1 -name '.*' ! -name '.' ! -name '..' -exec bash -c 'echo "Deleting {}"; rm -rf {}' \;
@@ -31,12 +28,12 @@ RUN groupadd --gid ${GID} ${USER} \
 
 USER ${USER}
 
-RUN npm install --omit=dev \
-    && rm -rf .npm
+RUN bun install --production \
+    && rm -rf ~/.bun/install/cache
     # TODO: generate lockfiles for each package manager
     ## pnpm import \
 
-FROM node:lts-slim AS final
+FROM oven/bun:1-slim AS final
 
 ENV NODE_ENV=production \
     DAEMON=false \
@@ -47,8 +44,7 @@ ENV NODE_ENV=production \
 
 WORKDIR /usr/src/app/
 
-RUN corepack enable \
-    && groupadd --gid ${GID} ${USER} \
+RUN groupadd --gid ${GID} ${USER} \
     && useradd --uid ${UID} --gid ${GID} --home-dir /usr/src/app/ --shell /bin/bash ${USER} \
     && mkdir -p /usr/src/app/logs/ /opt/config/ \
     && chown -R ${USER}:${USER} /usr/src/app/ /opt/config/
