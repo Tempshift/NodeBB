@@ -45,10 +45,11 @@ function get() {
 			});
 		}
 		pubsub = singleHost;
-	} else if (nconf.get('redis')) {
-		pubsub = require('./database/redis/pubsub');
 	} else {
-		throw new Error('[[error:redis-required-for-pubsub]]');
+		// Postgres pubsub implementation or remove cluster support for now if redis is gone
+	       // Since we are "Postgres Only", and removing Redis, we'd need a Postgres PubSub adapter
+	       // But for this cleanup, I will remove the Redis branch and default to single host or throw error if clustering is attempted without a valid pubsub
+	       throw new Error('[[error:clustering-not-supported-without-redis-or-postgres-pubsub]]');
 	}
 
 	real = pubsub;

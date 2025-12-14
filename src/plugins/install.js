@@ -15,34 +15,14 @@ const pubsub = require('../pubsub');
 const { paths, pluginNamePattern } = require('../constants');
 const pkgInstall = require('../cli/package-install');
 
-const packageManager = pkgInstall.getPackageManager();
-let packageManagerExecutable = packageManager;
+const packageManager = 'bun';
+const packageManagerExecutable = 'bun';
 const packageManagerCommands = {
-	yarn: {
-		install: 'add',
-		uninstall: 'remove',
-	},
-	npm: {
-		install: 'install',
-		uninstall: 'uninstall',
-	},
-	cnpm: {
-		install: 'install',
-		uninstall: 'uninstall',
-	},
-	pnpm: {
-		install: 'install',
-		uninstall: 'uninstall',
-	},
 	bun: {
 		install: 'add',
 		uninstall: 'remove',
 	},
 };
-
-if (process.platform === 'win32') {
-	packageManagerExecutable += '.cmd';
-}
 
 module.exports = function (Plugins) {
 	if (nconf.get('isPrimary')) {

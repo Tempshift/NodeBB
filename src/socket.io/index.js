@@ -30,12 +30,7 @@ Sockets.init = async function (server) {
 	});
 
 	if (nconf.get('isCluster')) {
-		if (nconf.get('redis')) {
-			const adapter = await require('../database/redis').socketAdapter();
-			io.adapter(adapter);
-		} else {
-			winston.warn('clustering detected, you should setup redis!');
-		}
+		winston.warn('Clustering detected, but Redis support has been removed. Socket.io Redis adapter is not available.');
 	}
 
 	io.on('connection', onConnection);

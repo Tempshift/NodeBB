@@ -2,15 +2,8 @@
 
 const nconf = require('nconf');
 
-const databaseName = nconf.get('database');
-const winston = require('winston');
-
-if (!databaseName) {
-	winston.error(new Error('Database type not set! Run ./nodebb setup'));
-	process.exit();
-}
-
-const primaryDB = require(`./${databaseName}`);
+const databaseName = 'postgres';
+const primaryDB = require('./postgres');
 const utils = require('../utils');
 
 primaryDB.parseIntFields = function (data, intFields, requestedFields) {
@@ -24,17 +17,8 @@ primaryDB.parseIntFields = function (data, intFields, requestedFields) {
 };
 
 primaryDB.initSessionStore = async function () {
-	const sessionStoreConfig = nconf.get('session_store') || nconf.get('redis') || nconf.get(databaseName);
-	let sessionStoreDB = primaryDB;
-
-	if (nconf.get('session_store')) {
-		sessionStoreDB = require(`./${sessionStoreConfig.name}`);
-	} else if (nconf.get('redis')) {
-		// if redis is specified, use it as session store over others
-		sessionStoreDB = require('./redis');
-	}
-
-	primaryDB.sessionStore = await sessionStoreDB.createSessionStore(sessionStoreConfig);
+	const sessionStoreConfig = nconf.get('session_store') || nconf.get(databaseName);
+	primaryDB.sessionStore = await primaryDB.createSessionStore(sessionStoreConfig);
 };
 
 function promisifySessionStoreMethod(method, sid) {

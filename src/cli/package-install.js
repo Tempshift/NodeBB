@@ -52,82 +52,13 @@ pkgInstall.updatePackageFile = () => {
 	fs.writeFileSync(paths.currentPackage, JSON.stringify(packageContents, null, 4));
 };
 
-pkgInstall.supportedPackageManager = [
-	'npm',
-	'cnpm',
-	'pnpm',
-	'yarn',
-	'bun',
-];
+pkgInstall.supportedPackageManager = ['bun'];
 
-pkgInstall.getPackageManager = () => {
-	try {
-		const packageContents = require(paths.currentPackage);
-		// This regex technically allows invalid values:
-		// cnpm isn't supported by corepack and it doesn't enforce a version string being present
-		const pmRegex = new RegExp(`^(?<packageManager>${pkgInstall.supportedPackageManager.join('|')})@?[\\d\\w\\.\\-]*$`);
-		const packageManager = packageContents.packageManager ? packageContents.packageManager.match(pmRegex) : false;
-		if (packageManager) {
-			return packageManager.groups.packageManager;
-		}
-		fs.accessSync(path.join(paths.nodeModules, 'nconf/package.json'), fs.constants.R_OK);
-		const nconf = require('nconf');
-		if (!Object.keys(nconf.stores).length) {
-			// Quick & dirty nconf setup for when you cannot rely on nconf having been required already
-			const configFile = path.resolve(__dirname, '../../', nconf.any(['config', 'CONFIG']) || 'config.json');
-			nconf.env().file({ // not sure why adding .argv() causes the process to terminate
-				file: configFile,
-			});
-		}
-		if (nconf.get('package_manager') && !pkgInstall.supportedPackageManager.includes(nconf.get('package_manager'))) {
-			nconf.clear('package_manager');
-		}
-
-		if (!nconf.get('package_manager')) {
-			nconf.set('package_manager', getPackageManagerByLockfile());
-		}
-
-		return nconf.get('package_manager') || 'npm';
-	} catch (e) {
-		// nconf not installed or other unexpected error/exception
-		return getPackageManagerByLockfile() || 'npm';
-	}
-};
-
-function getPackageManagerByLockfile() {
-	for (const [packageManager, lockfile] of Object.entries({ bun: 'bun.lock', npm: 'package-lock.json', yarn: 'yarn.lock', pnpm: 'pnpm-lock.yaml' })) {
-		try {
-			fs.accessSync(path.resolve(__dirname, `../../${lockfile}`), fs.constants.R_OK);
-			return packageManager;
-		} catch (e) {}
-	}
-}
+pkgInstall.getPackageManager = () => 'bun';
 
 pkgInstall.installAll = () => {
 	const prod = process.env.NODE_ENV !== 'development';
-	let command = 'npm install';
-
-	const supportedPackageManagerList = exports.supportedPackageManager; // load config from src/cli/package-install.js
-	const packageManager = pkgInstall.getPackageManager();
-	if (supportedPackageManagerList.indexOf(packageManager) >= 0) {
-		switch (packageManager) {
-			case 'yarn':
-				command = `yarn${prod ? ' --production' : ''}`;
-				break;
-			case 'pnpm':
-				command = 'pnpm install'; // pnpm checks NODE_ENV
-				break;
-			case 'cnpm':
-				command = `cnpm install ${prod ? ' --production' : ''}`;
-				break;
-			case 'bun':
-				command = `bun install${prod ? ' --production' : ''}`;
-				break;
-			default:
-				command += prod ? ' --omit=dev' : '';
-				break;
-		}
-	}
+	const command = `bun install${prod ? ' --production' : ''}`;
 
 	try {
 		cproc.execSync(command, {

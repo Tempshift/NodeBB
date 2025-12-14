@@ -13,12 +13,7 @@ const meta = require('./meta');
 const image = module.exports;
 
 function requireSharp() {
-	const sharp = require('sharp');
-	if (os.platform() === 'win32') {
-		// https://github.com/lovell/sharp/issues/1259
-		sharp.cache(false);
-	}
-	return sharp;
+	return require('sharp');
 }
 
 image.isFileTypeAllowed = async function (path) {

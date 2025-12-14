@@ -11,16 +11,8 @@ const chalk = require('chalk');
 const { paths, pluginNamePattern } = require('../constants');
 const pkgInstall = require('./package-install');
 
-const packageManager = pkgInstall.getPackageManager();
-let packageManagerExecutable = packageManager;
-let packageManagerInstallArgs = packageManager === 'yarn' ? ['add'] : ['install', '--save'];
-if (packageManager === 'bun') {
-	packageManagerInstallArgs = ['add'];
-}
-
-if (process.platform === 'win32') {
-	packageManagerExecutable += '.cmd';
-}
+const packageManagerExecutable = 'bun';
+const packageManagerInstallArgs = ['add'];
 
 async function getModuleVersions(modules) {
 	const versionHash = {};

@@ -76,11 +76,7 @@ Loader.addWorkerEvents = function (worker) {
 					});
 					break;
 				case 'socket.io':
-					workers.forEach((w) => {
-						if (w !== worker) {
-							w.send(message);
-						}
-					});
+				                // Redis adapter removed, socket.io clustering not supported in this simplified version
 					break;
 			}
 		}

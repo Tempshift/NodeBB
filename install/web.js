@@ -147,7 +147,7 @@ function ping(req, res) {
 }
 
 function welcome(req, res) {
-	const dbs = ['mongo', 'redis', 'postgres'];
+	const dbs = ['postgres'];
 	const databases = dbs.map((databaseName) => {
 		const questions = require(`../src/database/${databaseName}`).questions.filter(question => question && !question.hideOnWebInstall);
 
@@ -183,7 +183,7 @@ function install(req, res) {
 	req.setTimeout(0);
 	installing = true;
 
-	const database = nconf.get('database') || req.body.database || 'mongo';
+	const database = nconf.get('database') || req.body.database || 'postgres';
 	const setupEnvVars = {
 		...process.env,
 		CONFIG: nconf.get('config'),

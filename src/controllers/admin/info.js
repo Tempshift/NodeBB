@@ -75,8 +75,8 @@ async function getNodeInfo() {
 		},
 		os: {
 			hostname: os.hostname(),
-			type: os.type(),
-			platform: os.platform(),
+			type: 'Linux',
+			platform: 'linux',
 			arch: os.arch(),
 			release: os.release(),
 			load: os.loadavg().map(load => load.toFixed(2)).join(', '),

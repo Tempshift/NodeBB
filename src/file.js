@@ -122,24 +122,19 @@ file.delete = async function (path) {
 };
 
 file.link = async function link(filePath, destPath, relative) {
-	if (relative && process.platform !== 'win32') {
+	if (relative) {
 		filePath = path.relative(path.dirname(destPath), filePath);
 	}
 
-	if (process.platform === 'win32') {
-		await fs.promises.link(filePath, destPath);
-	} else {
-		await fs.promises.symlink(filePath, destPath, 'file');
-	}
+	await fs.promises.symlink(filePath, destPath, 'file');
 };
 
 file.linkDirs = async function linkDirs(sourceDir, destDir, relative) {
-	if (relative && process.platform !== 'win32') {
+	if (relative) {
 		sourceDir = path.relative(path.dirname(destDir), sourceDir);
 	}
 
-	const type = (process.platform === 'win32') ? 'junction' : 'dir';
-	await fs.promises.symlink(sourceDir, destDir, type);
+	await fs.promises.symlink(sourceDir, destDir, 'dir');
 };
 
 file.typeToExtension = function (type) {

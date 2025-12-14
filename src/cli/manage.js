@@ -157,21 +157,8 @@ async function info() {
 	await db.init();
 	const info = await db.info(db.client);
 
-	switch (nconf.get('database')) {
-		case 'redis':
-			console.log(`        version: ${info.redis_version}`);
-			console.log(`        disk sync:  ${info.rdb_last_bgsave_status}`);
-			break;
-
-		case 'mongo':
-			console.log(`        version: ${info.version}`);
-			console.log(`        engine:  ${info.storageEngine}`);
-			break;
-		case 'postgres':
-			console.log(`        version: ${info.version}`);
-			console.log(`        uptime:  ${info.uptime}`);
-			break;
-	}
+	console.log(`        version: ${info.version}`);
+	console.log(`        uptime:  ${info.uptime}`);
 
 	const analyticsData = await analytics.getHourlyStatsForSet('analytics:pageviews', Date.now(), 24);
 	const graph = new CliGraph({
